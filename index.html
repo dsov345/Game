@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Penalty Championship Pro Ultra</title>
+  <style>
+    :root {
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --bg: #050b1a; --card: rgba(10, 22, 50, 0.95); --border: rgba(0, 180, 255, 0.35);
+      --gold: #ffd700; --accent: #00e1ff; --green: #00ff88; --red: #ff334b;
+    }
+    [data-tour="wc"] { --bg: #0a0d1a; --border: rgba(212, 175, 55, 0.4); --accent: #ffd700; }
+    [data-tour="uel"] { --bg: #140802; --border: rgba(255, 120, 0, 0.4); --accent: #ff9100; }
+    [data-tour="uecl"] { --bg: #02140a; --border: rgba(0, 230, 118, 0.35); --accent: #00ff88; }
+    [data-tour="facup"] { --bg: #140407; --border: rgba(235, 47, 6, 0.4); --accent: #ff4757; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; font-family: var(--font); }
+    body {
+      background: var(--bg); color: #fff; min-height: 100vh;
+      display: flex; justify-content: center; align-items: center; padding: 8px;
+      transition: background 0.4s ease;
+    }
+    #fxCanvas { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999; }
+    .app {
+      width: 100%; max-width: 440px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 14px; box-shadow: 0 16px 40px rgba(0,0,0,0.7); position: relative;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+
+    .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .tour-title { font-size: 0.82rem; font-weight: 800; text-transform: uppercase; color: var(--accent); letter-spacing: 0.5px; }
+    .btn-icon {
+      width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06); color: #fff; font-size: 0.95rem; cursor: pointer;
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+    .btn-icon:active { transform: scale(0.92); background: rgba(255,255,255,0.12); }
+
+    .screen { display: none; opacity: 0; transition: opacity 0.25s ease, transform 0.25s ease; }
+    .screen.active { display: block; opacity: 1; transform: translateY(0); }
+
+    .form-group { margin-bottom: 10px; }
+    .label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: #8ca2cf; margin-bottom: 4px; display: block; }
+    .tour-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 8px; }
+    .btn-chip {
+      padding: 8px 2px; border-radius: 10px; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05); color: #8ca2cf; font-size: 0.68rem; font-weight: 800;
+      text-align: center; cursor: pointer; transition: all 0.2s ease;
+    }
+    .btn-chip.active { background: #0051ff; color: #fff; border-color: var(--accent); box-shadow: 0 0 10px rgba(0,81,255,0.4); }
+    [data-tour="wc"] .btn-chip.active { background: #b8860b; border-color: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.3); }
+
+    .team-select-box { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .team-card {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 14px;
+      padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .team-card img { width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+    select {
+      width: 100%; height: 36px; border-radius: 8px; border: 1px solid var(--border);
+      background: #0f172a; color: #fff; padding: 0 6px; font-weight: 700; font-size: 0.75rem; outline: none;
+    }
+    .btn-action {
+      width: 100%; height: 48px; border: none; border-radius: 14px;
+      background: linear-gradient(135deg, #0051ff, var(--accent)); color: #fff;
+      font-size: 0.95rem; font-weight: 900; cursor: pointer; margin-top: 8px;
+      box-shadow: 0 6px 18px rgba(0,81,255,0.35); transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .btn-action:active { transform: scale(0.97); filter: brightness(1.1); }
+
+    .scoreboard { background: rgba(0,0,0,0.45); border: 1px solid var(--border); border-radius: 16px; padding: 8px 12px; margin-bottom: 8px; }
+    .score-main { display: flex; justify-content: space-between; align-items: center; }
+    .team-badge { display: flex; align-items: center; gap: 6px; width: 36%; }
+    .team-badge.right { justify-content: flex-end; text-align: right; }
+    .team-crest { width: 30px; height: 30px; object-fit: contain; flex-shrink: 0; }
+    .team-name { font-size: 0.85rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .score-digits {
+      font-size: 1.6rem; font-weight: 900; color: var(--gold);
+      white-space: nowrap; flex-shrink: 0; min-width: 90px; text-align: center;
+      display: inline-flex; justify-content: center; align-items: center;
+      text-shadow: 0 0 10px rgba(255,215,0,0.35);
+    }
+
+    .dots-row { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 6px; }
+    .dots-box { display: flex; gap: 5px; width: 75px; }
+    .dots-box.right { justify-content: flex-end; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); flex-shrink: 0; transition: all 0.25s ease; }
+    .dot.goal { background: var(--green); border-color: var(--green); box-shadow: 0 0 6px var(--green); }
+    .dot.miss { background: var(--red); border-color: var(--red); box-shadow: 0 0 6px var(--red); }
+
+    .kicker-hud {
+      background: rgba(0,0,0,0.35); border: 1px solid var(--border); border-radius: 12px;
+      padding: 6px 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .kicker-tag { background: #0051ff; color: #fff; font-size: 0.7rem; font-weight: 900; padding: 2px 6px; border-radius: 6px; }
+    .kicker-name { font-weight: 800; font-size: 0.8rem; margin-left: 6px; }
+    .kicker-state { font-size: 0.68rem; font-weight: 800; color: var(--gold); text-transform: uppercase; }
+
+    /* Поле и стадион */
+    .stadium {
+      width: 100%; height: 300px; background: radial-gradient(circle at 50% 30%, #2e7d32 0%, #15471d 85%);
+      border-radius: 18px; border: 2px solid rgba(255,255,255,0.15); position: relative; overflow: hidden;
+      perspective: 800px;
+    }
+    
+    /* Декоративная сетка ворот - клики сквозь неё */
+    .goal-frame {
+      position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+      width: 280px; height: 175px; border: 6px solid #f8f9fa; border-bottom: none; border-radius: 6px 6px 0 0;
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 8px, transparent 8px, transparent 16px),
+                  repeating-linear-gradient(-45deg, rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 8px, transparent 8px, transparent 16px);
+      background-color: rgba(0,0,0,0.3); z-index: 2; pointer-events: none;
+      box-shadow: 0 0 15px rgba(255,255,255,0.3);
+    }
+    .goal-line { position: absolute; top: 191px; left: 50%; transform: translateX(-50%); width: 292px; height: 4px; background: #fff; z-index: 3; pointer-events: none; }
+    .penalty-spot { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 10px; height: 10px; background: #fff; border-radius: 50%; z-index: 3; pointer-events: none; }
+
+    /* Интерактивные сектора удара поверх ворот */
+    .shot-grid {
+      position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+      width: 280px; height: 175px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr);
+      gap: 4px; padding: 4px; z-index: 20;
+    }
+    .sector {
+      border: 1px dashed rgba(255,255,255,0.25); border-radius: 6px; background: rgba(255,255,255,0.03);
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+    .sector:hover { background: rgba(0, 230, 118, 0.15); border-color: var(--accent); }
+    .sector:active { background: rgba(0, 230, 118, 0.35); transform: scale(0.96); border-color: var(--green); }
+    .sector-hint { font-size: 0.65rem; color: rgba(255,255,255,0.6); font-weight: 800; pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+
+    .keeper {
+      position: absolute; top: 95px; left: 50%; width: 72px; height: 102px;
+      transform: translate3d(-50%, 0, 0); transform-origin: center bottom;
+      z-index: 4; pointer-events: none; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.7));
+      will-change: transform;
+    }
+    .ball {
+      position: absolute; bottom: 14px; left: 50%; width: 24px; height: 24px;
+      transform: translate3d(-50%, 0, 0) scale(1); border-radius: 50%; background: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6); z-index: 6; pointer-events: none;
+      will-change: transform;
+    }
+    .ball.on-fire { box-shadow: 0 0 20px 8px #ff3d00, 0 0 35px 15px #ff9100; }
+
+    .action-overlay {
+      position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%) scale(0.6);
+      opacity: 0; font-size: 2rem; font-weight: 900; text-transform: uppercase; z-index: 25; pointer-events: none;
+      transition: all 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .action-overlay.active { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    .action-overlay.goal { color: var(--green); text-shadow: 0 0 15px var(--green); }
+    .action-overlay.save { color: var(--red); text-shadow: 0 0 15px var(--red); }
+
+    .footer-bar {
+      margin-top: 8px; background: rgba(0,0,0,0.35); border: 1px solid var(--border);
+      border-radius: 12px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 800;
+    }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.82);
+      backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 18px;
+    }
+    .modal-backdrop.active { display: flex; animation: fadeIn 0.2s ease; }
+    .modal-box {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      width: 100%; max-width: 360px; padding: 18px; color: #fff;
+    }
+    .trophy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+    .trophy-cell { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 8px; text-align: center; }
+    .trophy-cell-count { font-size: 1.3rem; font-weight: 900; color: var(--gold); }
+    .trophy-cell-name { font-size: 0.65rem; color: #8ca2cf; font-weight: 700; text-transform: uppercase; }
+  </style>
+</head>
+<body data-tour="wc">
+
+<canvas id="fxCanvas"></canvas>
+
+<div class="app">
+  <div class="header-bar">
+    <div class="tour-title" id="headerTourTitle">🌍 Чемпионат Мира FIFA</div>
+    <div style="display: flex; gap: 6px;">
+      <button class="btn-icon" id="soundBtn">🔊</button>
+      <button class="btn-icon" id="hallBtn">🏆</button>
+      <button class="btn-icon" id="menuExitBtn" style="display:none;">✕</button>
+    </div>
+  </div>
+
+  <!-- Меню -->
+  <div class="screen active" id="menuScreen">
+    <div class="form-group">
+      <span class="label">Выбери турнир (Только финал)</span>
+      <div class="tour-grid">
+        <div class="btn-chip active" data-t="wc">🌍 ЧМ</div>
+        <div class="btn-chip" data-t="ucl">⭐ ЛЧ</div>
+        <div class="btn-chip" data-t="uel">🔥 ЛЕ</div>
+        <div class="btn-chip" data-t="uecl">🟢 ЛК</div>
+        <div class="btn-chip" data-t="facup">🦁 FA</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <span class="label">Команды финала</span>
+      <div class="team-select-box">
+        <div class="team-card">
+          <img id="pLogoPreview" alt="">
+          <span style="font-size:0.65rem; color:#8ca2cf; font-weight:800;">ТВОЯ КОМАНДА:</span>
+          <select id="pTeamSelect"></select>
+        </div>
+        <div class="team-card">
+          <img id="botLogoPreview" alt="">
+          <span style="font-size:0.65rem; color:#8ca2cf; font-weight:800;">СОПЕРНИК:</span>
+          <select id="botTeamSelect"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <span class="label">Сложность игры</span>
+      <div style="display:flex; gap:6px;" id="diffChips">
+        <div class="btn-chip active" style="flex:1;" data-diff="easy">Новичок (Честно)</div>
+        <div class="btn-chip" style="flex:1;" data-diff="normal">Профи</div>
+        <div class="btn-chip" style="flex:1;" data-diff="legend">Легенда</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <span class="label">Формат серии пенальти</span>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;" id="formatChips">
+        <div class="btn-chip active" style="flex:1 1 30%;" data-fmt="classic">5 ударов</div>
+        <div class="btn-chip" style="flex:1 1 30%;" data-fmt="first3">До 3</div>
+        <div class="btn-chip" style="flex:1 1 30%;" data-fmt="first5">До 5</div>
+        <div class="btn-chip" style="flex:1 1 45%;" data-fmt="first10">До 10 голов</div>
+        <div class="btn-chip" style="flex:1 1 45%;" data-fmt="first15">До 15 голов</div>
+      </div>
+    </div>
+
+    <button class="btn-action" id="startBtn">🏆 ВЫЙТИ НА ПОЛЕ ФИНАЛА</button>
+  </div>
+
+  <!-- Матч -->
+  <div class="screen" id="gameScreen">
+    <div class="scoreboard">
+      <div class="score-main">
+        <div class="team-badge">
+          <img class="team-crest" id="pCrest" alt="">
+          <span class="team-name" id="pName">РОС</span>
+        </div>
+        <div class="score-digits" id="scoreDisplay">0&nbsp;—&nbsp;0</div>
+        <div class="team-badge right">
+          <span class="team-name" id="botName">БРА</span>
+          <img class="team-crest" id="botCrest" alt="">
+        </div>
+      </div>
+
+      <div class="dots-row">
+        <div class="dots-box" id="pDots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <span style="font-size:0.65rem; color:#8ca2cf; font-weight:800;" id="roundText">РАУНД 1</span>
+        <div class="dots-box right" id="botDots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kicker-hud">
+      <div>
+        <span class="kicker-tag" id="kickerNum">#17</span>
+        <span class="kicker-name" id="kickerTitle">Александр Головин</span>
+      </div>
+      <span class="kicker-state" id="kickerState">ТВОЙ УДАР</span>
+    </div>
+
+    <div class="stadium">
+      <div class="action-overlay" id="overlayMsg">ГООООЛ!</div>
+      
+      <!-- Сетка ворот -->
+      <div class="goal-frame"></div>
+      <div class="goal-line"></div>
+      <div class="penalty-spot"></div>
+
+      <!-- Кликабельные сектора (поверх всего) -->
+      <div class="shot-grid" id="shotGrid">
+        <div class="sector" data-zone="TL"><span class="sector-hint">↖ Вверх Л</span></div>
+        <div class="sector" data-zone="TC"><span class="sector-hint">⬆ Вверх Ц</span></div>
+        <div class="sector" data-zone="TR"><span class="sector-hint">↗ Вверх П</span></div>
+        <div class="sector" data-zone="BL"><span class="sector-hint">↙ Низ Л</span></div>
+        <div class="sector" data-zone="BC"><span class="sector-hint">⬇ Низ Ц</span></div>
+        <div class="sector" data-zone="BR"><span class="sector-hint">↘ Низ П</span></div>
+      </div>
+
+      <!-- Вратарь на линии ворот -->
+      <div class="keeper" id="gkElem">
+        <svg viewBox="0 0 120 160" width="100%" height="100%">
+          <rect x="36" y="104" width="14" height="34" rx="4" fill="#fed7aa"/>
+          <rect x="70" y="104" width="14" height="34" rx="4" fill="#fed7aa"/>
+          <rect x="35" y="118" width="16" height="22" rx="3" fill="#1e293b"/>
+          <rect x="69" y="118" width="16" height="22" rx="3" fill="#1e293b"/>
+          <path d="M 33 82 L 87 82 L 85 106 L 66 106 L 60 92 L 54 106 L 35 106 Z" fill="#0f172a"/>
+          <path d="M 32 38 L 88 38 L 84 84 L 36 84 Z" id="gkJERSEY" fill="#00e676" stroke="#000" stroke-width="2"/>
+          <text x="60" y="66" font-size="16" font-weight="900" fill="#fff" text-anchor="middle">1</text>
+          <path id="armL" d="M 34 40 Q 12 55 16 75" fill="none" stroke-width="12" stroke-linecap="round" stroke="#00e676"/>
+          <path id="armR" d="M 86 40 Q 108 55 104 75" fill="none" stroke-width="12" stroke-linecap="round" stroke="#00e676"/>
+          <circle cx="16" cy="76" r="8" fill="#facc15" stroke="#000" stroke-width="2"/>
+          <circle cx="104" cy="76" r="8" fill="#facc15" stroke="#000" stroke-width="2"/>
+          <ellipse cx="60" cy="24" rx="13" ry="15" fill="#fed7aa"/>
+          <path d="M 47 20 Q 60 10 73 20 Z" fill="#1e293b"/>
+        </svg>
+      </div>
+
+      <div class="ball" id="matchBall"></div>
+    </div>
+
+    <div class="footer-bar">
+      <span id="turnHelp">Твой удар! Коснись зоны ворот</span>
+      <span style="color:var(--gold);" id="streakHelp">Игрок: 0 🔥</span>
+    </div>
+  </div>
+
+  <!-- Экран награждения -->
+  <div class="screen" id="finalScreen" style="text-align:center; padding:15px 0;">
+    <div id="trophyView" style="margin-bottom:12px; font-size:4.5rem;">🏆</div>
+    <h2 id="finalTitle" style="color:var(--gold); font-size:1.4rem; font-weight:900; margin-bottom:6px;">ЧЕМПИОН!</h2>
+    <p id="finalDesc" style="font-size:0.85rem; color:#8ca2cf; margin-bottom:16px; line-height:1.4;"></p>
+    <button class="btn-action" id="rematchBtn" style="margin-bottom:8px;">⚔️ СЫГРАТЬ ЕЩЁ РАЗ</button>
+    <button class="btn-chip" id="toMenuBtn" style="width:100%; padding:12px;">В главное меню</button>
+  </div>
+</div>
+
+<!-- Модалка Зала славы -->
+<div class="modal-backdrop" id="hallModal">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h3 style="font-size:1.1rem; font-weight:900;">🏆 Музей Трофеев</h3>
+      <button class="btn-icon" id="closeHall">✕</button>
+    </div>
+    <div class="trophy-grid">
+      <div class="trophy-cell">
+        <div style="font-size:1.5rem;">🌍</div>
+        <div class="trophy-cell-count" id="hallWc">0</div>
+        <div class="trophy-cell-name">Чемпионат Мира</div>
+      </div>
+      <div class="trophy-cell">
+        <div style="font-size:1.5rem;">⭐</div>
+        <div class="trophy-cell-count" id="hallUcl">0</div>
+        <div class="trophy-cell-name">Лига Чемпионов</div>
+      </div>
+      <div class="trophy-cell">
+        <div style="font-size:1.5rem;">🔥</div>
+        <div class="trophy-cell-count" id="hallUel">0</div>
+        <div class="trophy-cell-name">Лига Европы</div>
+      </div>
+      <div class="trophy-cell">
+        <div style="font-size:1.5rem;">🟢</div>
+        <div class="trophy-cell-count" id="hallUecl">0</div>
+        <div class="trophy-cell-name">Лига Конференций</div>
+      </div>
+      <div class="trophy-cell" style="grid-column: span 2;">
+        <div style="font-size:1.5rem;">🦁</div>
+        <div class="trophy-cell-count" id="hallFacup">0</div>
+        <div class="trophy-cell-name">Кубок Англии (FA Cup)</div>
+      </div>
+    </div>
+    <button class="btn-chip" id="clearHallBtn" style="width:100%; padding:8px;">Сбросить трофеи</button>
+  </div>
+</div>
+
+<script>
+const DB = {
+  wc: [
+    { id: 'rus', name: 'Россия', short: 'РОС', gk: '#ff9100', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg', kickers: [{name:'А. Головин', num:'17'}, {name:'А. Миранчук', num:'15'}, {name:'К. Тюкавин', num:'9'}, {name:'Ф. Чалов', num:'11'}, {name:'М. Кисляк', num:'8'}] },
+    { id: 'fra', name: 'Франция', short: 'ФРА', gk: '#ffd600', logo: 'https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg', kickers: [{name:'К. Мбаппе', num:'10'}, {name:'А. Гризманн', num:'7'}, {name:'У. Дембеле', num:'11'}, {name:'О. Тчуамени', num:'8'}, {name:'Б. Барколя', num:'20'}] },
+    { id: 'bra', name: 'Бразилия', short: 'БРА', gk: '#00e676', logo: 'https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg', kickers: [{name:'Винисиус Жр', num:'7'}, {name:'Родриго', num:'10'}, {name:'Рафинья', num:'11'}, {name:'Эндрик', num:'9'}, {name:'Лукас Пакета', num:'8'}] },
+    { id: 'arg', name: 'Аргентина', short: 'АРГ', gk: '#2979ff', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg', kickers: [{name:'Л. Месси', num:'10'}, {name:'Х. Альварес', num:'9'}, {name:'Л. Мартинес', num:'22'}, {name:'Р. Де Пауль', num:'7'}, {name:'Э. Фернандес', num:'24'}] },
+    { id: 'esp', name: 'Испания', short: 'ИСП', gk: '#304ffe', logo: 'https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg', kickers: [{name:'Л. Ямаль', num:'19'}, {name:'Нико Уильямс', num:'11'}, {name:'Дани Ольмо', num:'10'}, {name:'Педри', num:'8'}, {name:'Родри', num:'16'}] },
+    { id: 'eng', name: 'Англия', short: 'АНГ', gk: '#ff5252', logo: 'https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg', kickers: [{name:'Г. Кейн', num:'9'}, {name:'Д. Беллингем', num:'10'}, {name:'Б. Сака', num:'7'}, {name:'Ф. Фоден', num:'11'}, {name:'Д. Райс', num:'4'}] }
+  ],
+  uefa: [
+    { id: 'rma', name: 'Реал Мадрид', short: 'РМА', gk: '#00e676', logo: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg', kickers: [{name:'К. Мбаппе', num:'9'}, {name:'Винисиус Жр', num:'7'}, {name:'Д. Беллингем', num:'5'}, {name:'Ф. Вальверде', num:'8'}, {name:'Родриго', num:'11'}] },
+    { id: 'mci', name: 'Ман Сити', short: 'МСИ', gk: '#ffd600', logo: 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg', kickers: [{name:'Э. Холанд', num:'9'}, {name:'К. Де Брёйне', num:'17'}, {name:'Ф. Фоден', num:'47'}, {name:'Бернарду Силва', num:'20'}, {name:'Родри', num:'16'}] },
+    { id: 'bay', name: 'Бавария', short: 'БАВ', gk: '#111111', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg', kickers: [{name:'Г. Кейн', num:'9'}, {name:'Д. Мусиала', num:'42'}, {name:'М. Олисе', num:'17'}, {name:'Л. Сане', num:'10'}, {name:'Т. Мюллер', num:'25'}] },
+    { id: 'bar', name: 'Барселона', short: 'БАР', gk: '#00c853', logo: 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg', kickers: [{name:'Р. Левандовски', num:'9'}, {name:'Рафинья', num:'11'}, {name:'Л. Ямаль', num:'19'}, {name:'Дани Ольмо', num:'20'}, {name:'Педри', num:'8'}] },
+    { id: 'psg', name: 'ПСЖ', short: 'ПСЖ', gk: '#ff9100', logo: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg', kickers: [{name:'У. Дембеле', num:'10'}, {name:'Б. Барколя', num:'29'}, {name:'Витинья', num:'17'}, {name:'А. Хакими', num:'2'}, {name:'Р. Коло Муани', num:'23'}] },
+    { id: 'ars', name: 'Арсенал', short: 'АРС', gk: '#304ffe', logo: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg', kickers: [{name:'Б. Сака', num:'7'}, {name:'М. Эдегор', num:'8'}, {name:'К. Хаверц', num:'29'}, {name:'Л. Троссард', num:'19'}, {name:'Д. Райс', num:'41'}] },
+    // 5 клубов РПЛ
+    { id: 'zen', name: 'Зенит', short: 'ЗЕН', gk: '#ffd600', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/96/FC_Zenit_logo.svg', kickers: [{name:'М. Глушенков', num:'67'}, {name:'М. Кассьерра', num:'30'}, {name:'Клаудиньо', num:'11'}, {name:'Вендел', num:'8'}, {name:'А. Соболев', num:'7'}] },
+    { id: 'kras', name: 'Краснодар', short: 'КРА', gk: '#00e676', logo: 'https://upload.wikimedia.org/wikipedia/en/7/77/FC_Krasnodar_logo.svg', kickers: [{name:'Д. Кордоба', num:'9'}, {name:'Э. Сперцян', num:'10'}, {name:'Жоау Батчи', num:'11'}, {name:'К. Ленини', num:'88'}, {name:'В. Са', num:'7'}] },
+    { id: 'spa', name: 'Спартак', short: 'СПА', gk: '#ff1744', logo: 'https://upload.wikimedia.org/wikipedia/en/b/be/FC_Spartak_Moscow_logo.svg', kickers: [{name:'Э. Барко', num:'5'}, {name:'М. Угальде', num:'9'}, {name:'Т. Бонгонда', num:'77'}, {name:'Маркиньос', num:'8'}, {name:'Х. Медина', num:'19'}] },
+    { id: 'cska', name: 'ЦСКА', short: 'ЦСК', gk: '#00e5ff', logo: 'https://upload.wikimedia.org/wikipedia/en/3/37/PFC_CSKA_Moscow_logo.svg', kickers: [{name:'И. Обляков', num:'10'}, {name:'Т. Мусаев', num:'11'}, {name:'А. Файзуллаев', num:'21'}, {name:'М. Пьянич', num:'15'}, {name:'В. Давила', num:'7'}] },
+    { id: 'din', name: 'Динамо М', short: 'ДИН', gk: '#304ffe', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e2/FC_Dynamo_Moscow_Logo.svg', kickers: [{name:'К. Тюкавин', num:'70'}, {name:'Бителло', num:'8'}, {name:'Х. Карраскаль', num:'10'}, {name:'М. Нгамалё', num:'13'}, {name:'Л. Чавес', num:'24'}] }
+  ],
+  facup: [
+    { id: 'mci', name: 'Ман Сити', short: 'МСИ', gk: '#ffd600', logo: 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg', kickers: [{name:'Э. Холанд', num:'9'}, {name:'К. Де Брёйне', num:'17'}, {name:'Ф. Фоден', num:'47'}, {name:'Бернарду Силва', num:'20'}, {name:'И. Гюндоган', num:'19'}] },
+    { id: 'ars', name: 'Арсенал', short: 'АРС', gk: '#304ffe', logo: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg', kickers: [{name:'Б. Сака', num:'7'}, {name:'М. Эдегор', num:'8'}, {name:'К. Хаверц', num:'29'}, {name:'Л. Троссард', num:'19'}, {name:'Д. Райс', num:'41'}] },
+    { id: 'liv', name: 'Ливерпуль', short: 'ЛИВ', gk: '#2e7d32', logo: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg', kickers: [{name:'Мохамед Салах', num:'11'}, {name:'Д. Нуньес', num:'9'}, {name:'Д. Собослаи', num:'8'}, {name:'А. Мак Аллистер', num:'10'}, {name:'К. Гакпо', num:'18'}] },
+    { id: 'mun', name: 'Ман Юнайтед', short: 'МЮ', gk: '#00c853', logo: 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg', kickers: [{name:'Б. Фернандеш', num:'8'}, {name:'М. Рэшфорд', num:'10'}, {name:'Р. Хёйлунн', num:'9'}, {name:'А. Гарначо', num:'17'}, {name:'Каземиро', num:'18'}] },
+    { id: 'che', name: 'Челси', short: 'ЧЕЛ', gk: '#ff5252', logo: 'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg', kickers: [{name:'Коул Палмер', num:'20'}, {name:'Н. Джексон', num:'15'}, {name:'К. Нкунку', num:'18'}, {name:'Э. Фернандес', num:'8'}, {name:'П. Нету', num:'7'}] },
+    { id: 'lee', name: 'Лидс', short: 'ЛИД', gk: '#00e5ff', logo: 'https://upload.wikimedia.org/wikipedia/en/5/54/Leeds_United_F.C._logo.svg', kickers: [{name:'Й. Пиру', num:'10'}, {name:'В. Ньонто', num:'29'}, {name:'Д. Джеймс', num:'7'}, {name:'Б. Ааронсон', num:'11'}, {name:'П. Стрёйк', num:'5'}] }
+  ]
+};
+
+const ZONES = {
+  TL: { bX: -80, bY: -210, gX: -70, gY: -45, r: -30 },
+  TC: { bX: 0,   bY: -220, gX: 0,   gY: -55, r: 0 },
+  TR: { bX: 80,  bY: -210, gX: 70,  gY: -45, r: 30 },
+  BL: { bX: -85, bY: -130, gX: -75, gY: 20,  r: -50 },
+  BC: { bX: 0,   bY: -135, gX: 0,   gY: 15,  r: 0 },
+  BR: { bX: 85,  bY: -130, gX: 75,  gY: 20,  r: 50 }
+};
+
+class SoundManager {
+  constructor() {
+    this.ctx = null;
+    this.muted = false;
+  }
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) this.ctx = new AudioCtx();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+  play(freq, type, dur, gainVal = 0.2, delay = 0) {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+    setTimeout(() => {
+      try {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + dur);
+      } catch (e) {}
+    }, delay);
+  }
+  kick() { this.play(150, 'sine', 0.15, 0.35); }
+  save() { this.play(110, 'square', 0.22, 0.25); }
+  goal() {
+    this.play(260, 'triangle', 0.35, 0.3);
+    this.play(520, 'triangle', 0.45, 0.3, 80);
+  }
+  whistle() {
+    this.play(2400, 'sine', 0.18, 0.2);
+    this.play(3000, 'sine', 0.22, 0.2, 80);
+  }
+  win() {
+    [330, 440, 554, 660, 880].forEach((f, i) => {
+      this.play(f, 'triangle', 0.4, 0.2, i * 90);
+    });
+  }
+}
+
+class Game {
+  constructor() {
+    this.tour = 'wc';
+    this.diff = 'easy';
+    this.fmt = 'classic';
+    this.pGoals = 0;
+    this.bGoals = 0;
+    this.pStreak = 0;
+    this.bStreak = 0;
+    this.round = 1;
+    this.isPShot = true;
+    this.locked = false;
+    this.pHistory = [];
+    this.bHistory = [];
+    this.snd = new SoundManager();
+
+    this.initDOM();
+    this.updateHallUI();
+    this.setTour('wc');
+    this.bind();
+  }
+
+  initDOM() {
+    this.dom = {
+      pSelect: document.getElementById('pTeamSelect'),
+      bSelect: document.getElementById('botTeamSelect'),
+      pLogoPrev: document.getElementById('pLogoPreview'),
+      bLogoPrev: document.getElementById('botLogoPreview'),
+      score: document.getElementById('scoreDisplay'),
+      pName: document.getElementById('pName'),
+      bName: document.getElementById('botName'),
+      pCrest: document.getElementById('pCrest'),
+      bCrest: document.getElementById('botCrest'),
+      pDots: document.getElementById('pDots'),
+      bDots: document.getElementById('botDots'),
+      round: document.getElementById('roundText'),
+      kNum: document.getElementById('kickerNum'),
+      kTitle: document.getElementById('kickerTitle'),
+      kState: document.getElementById('kickerState'),
+      gk: document.getElementById('gkElem'),
+      gkJERSEY: document.getElementById('gkJERSEY'),
+      armL: document.getElementById('armL'),
+      armR: document.getElementById('armR'),
+      ball: document.getElementById('matchBall'),
+      overlay: document.getElementById('overlayMsg'),
+      turnHelp: document.getElementById('turnHelp'),
+      streakHelp: document.getElementById('streakHelp'),
+      screens: {
+        menu: document.getElementById('menuScreen'),
+        game: document.getElementById('gameScreen'),
+        final: document.getElementById('finalScreen')
+      }
+    };
+  }
+
+  setTour(t) {
+    this.tour = t;
+    document.body.setAttribute('data-tour', t);
+    const names = { wc:'🌍 ЧМ FIFA', ucl:'⭐ ЛЧ UEFA', uel:'🔥 ЛЕ UEFA', uecl:'🟢 ЛК UEFA', facup:'🦁 FA Cup' };
+    document.getElementById('headerTourTitle').innerText = names[t];
+
+    const list = (t === 'wc') ? DB.wc : (t === 'facup' ? DB.facup : DB.uefa);
+    this.dom.pSelect.innerHTML = '';
+    this.dom.bSelect.innerHTML = '';
+    list.forEach(item => {
+      this.dom.pSelect.add(new Option(item.name, item.id));
+      this.dom.bSelect.add(new Option(item.name, item.id));
+    });
+    this.dom.bSelect.selectedIndex = 1;
+    this.updateLogos();
+  }
+
+  updateLogos() {
+    const list = (this.tour === 'wc') ? DB.wc : (this.tour === 'facup' ? DB.facup : DB.uefa);
+    const p = list.find(x => x.id === this.dom.pSelect.value) || list[0];
+    const b = list.find(x => x.id === this.dom.bSelect.value) || list[1];
+    this.dom.pLogoPrev.src = p.logo;
+    this.dom.bLogoPrev.src = b.logo;
+  }
+
+  start() {
+    this.snd.init();
+    const list = (this.tour === 'wc') ? DB.wc : (this.tour === 'facup' ? DB.facup : DB.uefa);
+    this.pTeam = list.find(x => x.id === this.dom.pSelect.value) || list[0];
+    this.bTeam = list.find(x => x.id === this.dom.bSelect.value) || list[1];
+    if (this.pTeam.id === this.bTeam.id) {
+      alert('Выбери разных финалистов!'); return;
+    }
+
+    this.pGoals = 0; this.bGoals = 0; this.pStreak = 0; this.bStreak = 0;
+    this.round = 1; this.isPShot = true; this.locked = false;
+    this.pHistory = []; this.bHistory = [];
+
+    this.dom.pName.innerText = this.pTeam.short;
+    this.dom.bName.innerText = this.bTeam.short;
+    this.dom.pCrest.src = this.pTeam.logo;
+    this.dom.bCrest.src = this.bTeam.logo;
+
+    this.updateScoreUI();
+    this.showScreen('game');
+    document.getElementById('menuExitBtn').style.display = 'block';
+    this.snd.whistle();
+    this.setupTurn();
+  }
+
+  setupTurn() {
+    this.dom.ball.classList.remove('on-fire');
+    this.dom.ball.style.transition = 'none';
+    this.dom.ball.style.transform = 'translate3d(-50%, 0, 0) scale(1)';
+    this.dom.ball.style.bottom = '14px';
+    this.dom.ball.style.left = '50%';
+
+    this.dom.gk.style.transition = 'none';
+    this.dom.gk.style.transform = 'translate3d(-50%, 0, 0)';
+    this.dom.gk.style.left = '50%';
+
+    this.dom.round.innerText = `РАУНД ${this.round}`;
+    this.dom.streakHelp.innerText = `Игрок: ${this.pStreak} 🔥 | Бот: ${this.bStreak}`;
+
+    const kicker = this.isPShot
+      ? this.pTeam.kickers[(this.round - 1) % this.pTeam.kickers.length]
+      : this.bTeam.kickers[(this.round - 1) % this.bTeam.kickers.length];
+
+    this.dom.kNum.innerText = `#${kicker.num}`;
+    this.dom.kTitle.innerText = kicker.name;
+
+    if (this.isPShot) {
+      this.dom.gkJERSEY.setAttribute('fill', this.bTeam.gk);
+      this.dom.armL.setAttribute('stroke', this.bTeam.gk);
+      this.dom.armR.setAttribute('stroke', this.bTeam.gk);
+      this.dom.kState.innerText = 'ТВОЙ УДАР';
+      this.dom.kState.style.color = 'var(--green)';
+      this.dom.turnHelp.innerText = 'Твой удар! Коснись зоны ворот';
+    } else {
+      this.dom.gkJERSEY.setAttribute('fill', this.pTeam.gk);
+      this.dom.armL.setAttribute('stroke', this.pTeam.gk);
+      this.dom.armR.setAttribute('stroke', this.pTeam.gk);
+      this.dom.kState.innerText = 'УДАР СОПЕРНИКА';
+      this.dom.kState.style.color = '#ffaa00';
+      this.dom.turnHelp.innerText = 'Сейв! Угадай куда прыгнет вратарь';
+    }
+  }
+
+  shot(zone) {
+    if (this.locked) return;
+    this.locked = true;
+    this.snd.init();
+
+    if (this.isPShot) {
+      this.execPlayerShot(zone);
+    } else {
+      this.execBotShot(zone);
+    }
+  }
+
+  execPlayerShot(zone) {
+    const all = ['TL', 'TC', 'TR', 'BL', 'BC', 'BR'];
+    let botGkZone = all[Math.floor(Math.random() * 6)];
+
+    if (this.pStreak >= 2) {
+      if (Math.random() < 0.90) {
+        const miss = all.filter(z => z !== zone);
+        botGkZone = miss[Math.floor(Math.random() * miss.length)];
+      }
+    } else {
+      let chance = (this.diff === 'easy') ? 0.10 : (this.diff === 'normal' ? 0.166 : 0.32);
+      if (Math.random() < chance) botGkZone = zone;
+      else {
+        const miss = all.filter(z => z !== zone);
+        botGkZone = miss[Math.floor(Math.random() * miss.length)];
+      }
+    }
+
+    let dur = (this.pStreak >= 2) ? 0.26 : 0.42;
+    if (this.pStreak >= 2) this.dom.ball.classList.add('on-fire');
+
+    this.animate(zone, botGkZone, dur, () => {
+      if (zone === botGkZone) {
+        this.snd.save();
+        this.pStreak = 0;
+        this.pHistory.push(false);
+        this.banner('СЕЙВ ВРАТАРЯ!', 'save');
+        this.dom.ball.style.transform = 'translate3d(-50%, -100px, 0) scale(0.6)';
+      } else {
+        this.snd.goal();
+        this.pGoals++;
+        this.pStreak++;
+        this.pHistory.push(true);
+        this.banner(this.pStreak >= 3 ? 'ПУШКА В СЕТКУ! 🔥' : 'ГОООООЛ!', 'goal');
+      }
+
+      this.updateScoreUI();
+      this.checkEnd(() => {
+        this.isPShot = false;
+        setTimeout(() => { this.setupTurn(); this.locked = false; }, 1000);
+      });
+    });
+  }
+
+  execBotShot(playerGkZone) {
+    const all = ['TL', 'TC', 'TR', 'BL', 'BC', 'BR'];
+    let botShotZone = all[Math.floor(Math.random() * 6)];
+
+    if (this.diff === 'easy') {
+      if (Math.random() < 0.35) botShotZone = playerGkZone;
+    } else if (this.diff === 'legend' && this.bStreak >= 2) {
+      const corners = ['TL', 'TR', 'BL', 'BR'].filter(z => z !== playerGkZone);
+      botShotZone = corners[Math.floor(Math.random() * corners.length)] || botShotZone;
+    }
+
+    let dur = 0.42;
+    if (this.diff !== 'easy' && this.bStreak >= 3) {
+      dur = 0.28; this.dom.ball.classList.add('on-fire');
+    }
+
+    this.animate(botShotZone, playerGkZone, dur, () => {
+      if (botShotZone === playerGkZone) {
+        this.snd.save();
+        this.bStreak = 0;
+        this.bHistory.push(false);
+        this.banner('ТЫ СЕЙВАНУЛ! 🧤', 'save');
+        this.dom.ball.style.transform = 'translate3d(-50%, -100px, 0) scale(0.6)';
+      } else {
+        this.snd.goal();
+        this.bGoals++;
+        this.bStreak++;
+        this.bHistory.push(true);
+        this.banner('БОТ ЗАБИЛ!', 'goal');
+      }
+
+      this.updateScoreUI();
+      this.checkEnd(() => {
+        this.round++;
+        this.isPShot = true;
+        setTimeout(() => { this.setupTurn(); this.locked = false; }, 1000);
+      });
+    });
+  }
+
+  animate(ballZ, gkZ, dur, cb) {
+    const b = ZONES[ballZ];
+    const g = ZONES[gkZ];
+    this.snd.kick();
+
+    this.dom.gk.style.transition = `transform ${dur}s cubic-bezier(0.18, 0.89, 0.32, 1.15)`;
+    this.dom.gk.style.transform = `translate3d(calc(-50% + ${g.gX}px), ${g.gY}px, 0) rotate(${g.r}deg)`;
+
+    this.dom.ball.style.transition = `transform ${dur}s cubic-bezier(0.2, 0.7, 0.1, 1)`;
+    this.dom.ball.style.transform = `translate3d(calc(-50% + ${b.bX}px), ${b.bY}px, 0) scale(0.48)`;
+
+    setTimeout(cb, dur * 1000);
+  }
+
+  banner(txt, cls) {
+    this.dom.overlay.className = `action-overlay active ${cls}`;
+    this.dom.overlay.innerText = txt;
+    setTimeout(() => { this.dom.overlay.classList.remove('active'); }, 850);
+  }
+
+  updateScoreUI() {
+    this.dom.score.innerHTML = `${this.pGoals}&nbsp;—&nbsp;${this.bGoals}`;
+
+    const updateDots = (container, arr) => {
+      const dots = container.querySelectorAll('.dot');
+      const recent = arr.slice(-5);
+      dots.forEach((d, idx) => {
+        d.className = 'dot';
+        if (idx < recent.length) {
+          d.classList.add(recent[idx] ? 'goal' : 'miss');
+        }
+      });
+    };
+    updateDots(this.dom.pDots, this.pHistory);
+    updateDots(this.dom.bDots, this.bHistory);
+  }
+
+  checkEnd(continueCb) {
+    setTimeout(() => {
+      const pC = this.pHistory.length;
+      const bC = this.bHistory.length;
+
+      if (['first3', 'first5', 'first10', 'first15'].includes(this.fmt)) {
+        const target = parseInt(this.fmt.replace('first', ''), 10);
+        if (pC === bC && (this.pGoals >= target || this.bGoals >= target) && this.pGoals !== this.bGoals) {
+          return this.finish(this.pGoals > this.bGoals);
+        }
+      } else {
+        if (pC >= 5 && bC >= 5 && pC === bC) {
+          if (this.pGoals !== this.bGoals) return this.finish(this.pGoals > this.bGoals);
+        }
+        const pRem = Math.max(0, 5 - pC);
+        const bRem = Math.max(0, 5 - bC);
+        if (this.pGoals > this.bGoals + bRem) return this.finish(true);
+        if (this.bGoals > this.pGoals + pRem) return this.finish(false);
+      }
+      continueCb();
+    }, 300);
+  }
+
+  finish(isWin) {
+    this.showScreen('final');
+    const trophies = { wc:'Кубок Мира FIFA 🌍', ucl:'Кубок Чемпионов 🏆', uel:'Кубок Лиги Европы 🔥', uecl:'Кубок Лиги Конференций 🟢', facup:'Кубок Англии 🦁' };
+
+    if (isWin) {
+      this.snd.win();
+      document.getElementById('trophyView').innerText = (this.tour === 'wc') ? '🌍' : '🏆';
+      document.getElementById('finalTitle').innerText = 'ПОБЕДА В ФИНАЛЕ!';
+      document.getElementById('finalDesc').innerHTML = `Поздравляем! <b>${this.pTeam.name}</b> забирает <b>${trophies[this.tour]}</b> со счетом <b>${this.pGoals}:${this.bGoals}</b>!`;
+      this.saveTrophy(this.tour);
+    } else {
+      document.getElementById('trophyView').innerText = '🥈';
+      document.getElementById('finalTitle').innerText = 'ПОРАЖЕНИЕ...';
+      document.getElementById('finalDesc').innerHTML = `<b>${this.bTeam.name}</b> побеждает в финале (${this.bGoals}:${this.pGoals}). Ты забираешь серебряные медали.`;
+    }
+  }
+
+  saveTrophy(tour) {
+    try {
+      const data = JSON.parse(localStorage.getItem('penalty_pro_trophies') || '{}');
+      data[tour] = (data[tour] || 0) + 1;
+      localStorage.setItem('penalty_pro_trophies', JSON.stringify(data));
+      this.updateHallUI();
+    } catch (e) {}
+  }
+
+  updateHallUI() {
+    try {
+      const data = JSON.parse(localStorage.getItem('penalty_pro_trophies') || '{}');
+      document.getElementById('hallWc').innerText = data.wc || 0;
+      document.getElementById('hallUcl').innerText = data.ucl || 0;
+      document.getElementById('hallUel').innerText = data.uel || 0;
+      document.getElementById('hallUecl').innerText = data.uecl || 0;
+      document.getElementById('hallFacup').innerText = data.facup || 0;
+    } catch (e) {}
+  }
+
+  showScreen(name) {
+    Object.values(this.dom.screens).forEach(s => s.classList.remove('active'));
+    this.dom.screens[name].classList.add('active');
+  }
+
+  bind() {
+    document.querySelectorAll('.tour-grid .btn-chip').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.tour-grid .btn-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.setTour(btn.dataset.t);
+      };
+    });
+
+    this.dom.pSelect.onchange = () => this.updateLogos();
+    this.dom.bSelect.onchange = () => this.updateLogos();
+
+    document.querySelectorAll('#diffChips .btn-chip').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('#diffChips .btn-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.diff = btn.dataset.diff;
+      };
+    });
+
+    document.querySelectorAll('#formatChips .btn-chip').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('#formatChips .btn-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.fmt = btn.dataset.fmt;
+      };
+    });
+
+    document.querySelectorAll('.sector').forEach(s => {
+      s.onclick = () => this.shot(s.dataset.zone);
+    });
+
+    document.getElementById('startBtn').onclick = () => this.start();
+    document.getElementById('rematchBtn').onclick = () => this.start();
+
+    const goMenu = () => {
+      document.getElementById('menuExitBtn').style.display = 'none';
+      this.showScreen('menu');
+    };
+    document.getElementById('toMenuBtn').onclick = goMenu;
+    document.getElementById('menuExitBtn').onclick = goMenu;
+
+    const modal = document.getElementById('hallModal');
+    document.getElementById('hallBtn').onclick = () => {
+      this.updateHallUI();
+      modal.classList.add('active');
+    };
+    document.getElementById('closeHall').onclick = () => modal.classList.remove('active');
+    document.getElementById('clearHallBtn').onclick = () => {
+      localStorage.removeItem('penalty_pro_trophies');
+      this.updateHallUI();
+    };
+
+    const sBtn = document.getElementById('soundBtn');
+    sBtn.onclick = () => {
+      this.snd.init();
+      this.snd.muted = !this.snd.muted;
+      sBtn.innerText = this.snd.muted ? '🔇' : '🔊';
+    };
+
+    const initAudioOnce = () => {
+      this.snd.init();
+      window.removeEventListener('touchstart', initAudioOnce);
+      window.removeEventListener('click', initAudioOnce);
+    };
+    window.addEventListener('touchstart', initAudioOnce, { passive: true });
+    window.addEventListener('click', initAudioOnce, { passive: true });
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => new Game());
+</script>
+</body>
+</html>
