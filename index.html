@@ -73,10 +73,6 @@
       --stadium-pattern: repeating-linear-gradient(0deg, rgba(248,113,113,0.04) 0, rgba(248,113,113,0.04) 28px, transparent 28px, transparent 56px);
     }
 
-    body[data-theme="emerald"] { --bg: #021c14; --surface: rgba(6, 44, 30, 0.85); --accent: #34d399; }
-    body[data-theme="obsidian"] { --bg: #000000; --surface: rgba(24, 24, 27, 0.9); --accent: #fbbf24; }
-    body[data-theme="crimson"] { --bg: #180208; --surface: rgba(43, 6, 17, 0.86); --accent: #fb7185; }
-
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; font-family: var(--font-sf); letter-spacing: -0.01em; }
     body {
       background: var(--bg);
@@ -145,7 +141,7 @@
       border-radius: 50%; background: rgba(0,0,0,0.35); border: 1px solid var(--border-highlight);
       overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
-    .team-crest-wrap img, .team-crest-wrap svg { width: 34px; height: 34px; object-fit: contain; }
+    .team-crest-wrap svg { width: 34px; height: 34px; object-fit: contain; }
     select {
       width: 100%; height: 36px; border-radius: 10px; border: 1px solid var(--border-subtle);
       background: #020617; color: #fff; padding: 0 8px; font-weight: 700; font-size: 0.74rem; outline: none;
@@ -211,7 +207,6 @@
       content: ''; position: absolute; inset: 0; background: var(--stadium-pattern); pointer-events: none;
     }
 
-    /* ФОН СТАДИОНА, ТРИБУНЫ И ВЕРХНИЕ ПРОЖЕКТОРЫ */
     .stadium-grandstand {
       position: absolute; top: 0; left: 0; width: 100%; height: 85px;
       background: linear-gradient(180deg, #020617 0%, #0b1528 45%, #0f1e36 75%, transparent 100%);
@@ -317,18 +312,18 @@
     .ball.on-mega { box-shadow: 0 0 35px 18px #00f2fe, 0 0 60px 28px #9d4edd; }
 
     .action-overlay {
-      position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
-      opacity: 0; font-size: 1.45rem; font-weight: 900; text-transform: uppercase; z-index: 25; pointer-events: none;
-      padding: 12px 24px; border-radius: 20px; border: 2px solid #fff;
-      background: rgba(9, 14, 26, 0.96); box-shadow: 0 10px 40px rgba(0,0,0,0.95);
-      transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(0.6);
+      opacity: 0; font-size: 1.05rem; font-weight: 900; text-transform: uppercase; z-index: 25; pointer-events: none;
+      padding: 8px 18px; border-radius: 14px; border: 1.5px solid #fff;
+      background: rgba(9, 14, 26, 0.94); box-shadow: 0 8px 25px rgba(0,0,0,0.9);
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       white-space: nowrap; text-align: center;
     }
     .action-overlay.active { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    .action-overlay.goal { color: #00ff88; border-color: #00ff88; box-shadow: 0 0 35px rgba(0,255,136,0.7); }
-    .action-overlay.save-user { color: #10b981; border-color: #10b981; box-shadow: 0 0 35px rgba(16,185,129,0.75); }
-    .action-overlay.save-bot { color: #f43f5e; border-color: #f43f5e; box-shadow: 0 0 35px rgba(244,63,94,0.75); }
-    .action-overlay.notice { color: #00e5ff; border-color: #00e5ff; font-size: 1.2rem; box-shadow: 0 0 35px rgba(0,229,255,0.7); }
+    .action-overlay.goal { color: #00ff88; border-color: #00ff88; box-shadow: 0 0 25px rgba(0,255,136,0.6); }
+    .action-overlay.save-user { color: #10b981; border-color: #10b981; box-shadow: 0 0 25px rgba(16,185,129,0.7); }
+    .action-overlay.save-bot { color: #f43f5e; border-color: #f43f5e; box-shadow: 0 0 25px rgba(244,63,94,0.7); }
+    .action-overlay.notice { color: #00e5ff; border-color: #00e5ff; font-size: 0.95rem; box-shadow: 0 0 25px rgba(0,229,255,0.6); }
 
     .footer-bar {
       margin-top: 8px; background: rgba(0,0,0,0.35); border: 1px solid var(--border-subtle);
@@ -384,7 +379,7 @@
 
 <div class="app" id="appShell">
   <div class="header-bar">
-    <div class="tour-title" id="headerTourTitle">🌍 ЧМ FIFA</div>
+    <div class="tour-title" id="headerTourTitle">🌍 МИРОВОЙ КУБОК 2026</div>
     <div class="header-controls">
       <div class="wallet-box">🪙 <span id="coinCount">0</span></div>
       <button class="btn-icon" id="settingsBtn" title="Настройки">⚙️</button>
@@ -396,13 +391,13 @@
     <div class="form-group">
       <span class="label">Турнир</span>
       <div class="chips-grid">
-        <div class="btn-chip active" data-t="wc">🌍 ЧМ</div>
-        <div class="btn-chip" data-t="euro" id="chip-euro">🇪🇺 EURO</div>
-        <div class="btn-chip" data-t="copa" id="chip-copa">🌎 COPA</div>
-        <div class="btn-chip" data-t="ucl">⭐ ЛЧ</div>
-        <div class="btn-chip" data-t="uel">🔥 ЛЕ</div>
-        <div class="btn-chip" data-t="uecl">🟢 ЛК</div>
-        <div class="btn-chip" data-t="facup">🦁 FA</div>
+        <div class="btn-chip active" data-t="wc">🌍 МИР</div>
+        <div class="btn-chip" data-t="euro" id="chip-euro">🇪🇺 ЕВРО</div>
+        <div class="btn-chip" data-t="copa" id="chip-copa">🌎 АМЕРИКА</div>
+        <div class="btn-chip" data-t="ucl">⭐ ЧЕМПИОНЫ</div>
+        <div class="btn-chip" data-t="uel">🔥 ЛИГА КУБОК</div>
+        <div class="btn-chip" data-t="uecl">🟢 КОНФЕРЕНЦИЯ</div>
+        <div class="btn-chip" data-t="facup">🦁 АНГЛИЯ</div>
       </div>
     </div>
 
@@ -493,7 +488,6 @@
     </div>
 
     <div class="stadium" id="stadiumBox">
-      <!-- СТАДИОН И ВЕРХНИЕ ПРОЖЕКТОРЫ -->
       <div class="stadium-grandstand">
         <div class="stadium-roof-gantry">
           <div class="roof-lamp-bank"><div class="roof-lamp"></div><div class="roof-lamp"></div><div class="roof-lamp"></div></div>
@@ -502,7 +496,6 @@
         </div>
       </div>
 
-      <!-- СЕКТОР ФАНАТОВ С ВСПЫШКАМИ -->
       <div class="crowd-layer">
         <div class="crowd-flashes">
           <div class="flash" style="top:12px; left:18%;"></div>
@@ -513,7 +506,6 @@
         <div class="crowd-heads" id="crowdHeads"></div>
       </div>
 
-      <!-- ПРОЖЕКТОРЫ СВЕРХУ ПОЛЯ -->
       <div class="spotlight left"></div>
       <div class="spotlight right"></div>
 
@@ -578,6 +570,14 @@
       <button class="btn-icon" id="closeSettings">✕</button>
     </div>
 
+    <!-- СТАТИЧНАЯ КНОПКА TELEGRAM КАНАЛА -->
+    <div style="margin-bottom:12px;">
+      <a href="https://t.me/BrowserFootball" target="_blank" class="btn-action" style="display:flex; align-items:center; justify-content:center; gap:8px; background:linear-gradient(180deg, #229ED9 0%, #1783b5 100%); text-decoration:none; margin-top:0; height:44px; font-size:0.88rem;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.12.03-1.99 1.27-5.63 3.73-.53.36-1.02.54-1.45.53-.48-.01-1.4-.27-2.09-.49-.84-.27-1.51-.42-1.45-.89.03-.25.38-.5.98-.77 3.86-1.68 6.44-2.78 7.74-3.32 3.69-1.54 4.45-1.81 4.96-1.82.11 0 .36.03.52.17.14.12.18.28.2.46-.01.06.01.18 0 .28z" fill="#fff"/></svg>
+        <span>Наш Telegram Канал</span>
+      </a>
+    </div>
+
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom:12px;">
       <button class="btn-chip active" id="toggleSoundBtn" style="padding:10px;">Звуки: ВКЛ 🔊</button>
       <button class="btn-chip active" id="toggleMusicBtn" style="padding:10px;">Музыка: ВКЛ 🎵</button>
@@ -629,7 +629,7 @@
     <h3 style="font-size:1.1rem; font-weight:900; margin-bottom:10px; color:var(--accent);">📖 Правила чемпионата</h3>
     <ul style="font-size:0.78rem; line-height:1.5; color:#cbd5e1; padding-left:16px; margin-bottom:14px;">
       <li><b>Удары и Сейвы:</b> Зелёный баннер — бьёшь ты. Оранжевый — сейвишь вратарём.</li>
-      <li><b>Регламент плей-офф:</b> Ответные матчи действуют <b>только в еврокубках (ЛЧ, ЛЕ, ЛК)</b>. В ЧМ, EURO, Copa и FA Cup матчи идут строго навылет по 1 игре!</li>
+      <li><b>Регламент плей-офф:</b> Ответные матчи действуют <b>только в еврокубках</b>. В кубках сборных матчи идут строго навылет по 1 игре!</li>
       <li><b>MEGA TEAM:</b> Ультимативная команда со скоростью удара 0.05 сек. Доступна во всех турнирах.</li>
     </ul>
     <button class="btn-action" id="closeHelp">ПОНЯТНО</button>
@@ -643,18 +643,19 @@
       <button class="btn-icon" id="closeHall">✕</button>
     </div>
     <div class="trophy-grid">
-      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconWc"></div><div class="trophy-cell-count" id="hallWc">0</div><div class="trophy-cell-name">ЧМ FIFA</div></div>
-      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconEuro"></div><div class="trophy-cell-count" id="hallEuro">0</div><div class="trophy-cell-name">EURO</div></div>
-      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconCopa"></div><div class="trophy-cell-count" id="hallCopa">0</div><div class="trophy-cell-name">Copa America</div></div>
-      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconUcl"></div><div class="trophy-cell-count" id="hallUcl">0</div><div class="trophy-cell-name">Лига Чемпионов</div></div>
-      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconUel"></div><div class="trophy-cell-count" id="hallUel">0</div><div class="trophy-cell-name">Лига Европы</div></div>
-      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconUecl"></div><div class="trophy-cell-count" id="hallUecl">0</div><div class="trophy-cell-name">Лига Конференций</div></div>
+      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconWc"></div><div class="trophy-cell-count" id="hallWc">0</div><div class="trophy-cell-name">Мировой Кубок</div></div>
+      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconEuro"></div><div class="trophy-cell-count" id="hallEuro">0</div><div class="trophy-cell-name">Кубок Европы</div></div>
+      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconCopa"></div><div class="trophy-cell-count" id="hallCopa">0</div><div class="trophy-cell-name">Кубок Америки</div></div>
+      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconUcl"></div><div class="trophy-cell-count" id="hallUcl">0</div><div class="trophy-cell-name">Кубок Чемпионов</div></div>
+      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconUel"></div><div class="trophy-cell-count" id="hallUel">0</div><div class="trophy-cell-name">Лига Кубок</div></div>
+      <div class="trophy-cell"><div class="trophy-cell-icon" id="hallIconUecl"></div><div class="trophy-cell-count" id="hallUecl">0</div><div class="trophy-cell-name">Конференция</div></div>
       <div class="trophy-cell" style="grid-column: span 2;"><div class="trophy-cell-icon" id="hallIconFacup"></div><div class="trophy-cell-count" id="hallFacup">0</div><div class="trophy-cell-name">Кубок Англии</div></div>
     </div>
   </div>
 </div>
 
 <script>
+// ВЕКТОРНЫЕ КУБКИ
 const TROPHY_SVGS = {
   wc: `<svg viewBox="0 0 100 130" width="100%" height="100%"><defs><linearGradient id="goldG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fffbeb"/><stop offset="35%" stop-color="#f59e0b"/><stop offset="70%" stop-color="#d97706"/><stop offset="100%" stop-color="#78350f"/></linearGradient></defs><ellipse cx="50" cy="118" rx="28" ry="7" fill="#047857"/><rect x="25" y="112" width="50" height="7" rx="3" fill="url(#goldG)"/><ellipse cx="50" cy="112" rx="25" ry="5" fill="#047857"/><path d="M40 108 Q50 82 43 62 Q50 52 50 42 Q50 52 57 62 Q50 82 60 108 Z" fill="url(#goldG)"/><circle cx="50" cy="28" r="22" fill="url(#goldG)"/><path d="M46 62 Q30 50 36 34" stroke="url(#goldG)" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M54 62 Q70 50 64 34" stroke="url(#goldG)" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`,
   ucl: `<svg viewBox="0 0 100 130" width="100%" height="100%"><defs><linearGradient id="silverG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="35%" stop-color="#cbd5e1"/><stop offset="70%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#475569"/></linearGradient></defs><ellipse cx="50" cy="120" rx="24" ry="6" fill="url(#silverG)"/><rect x="44" y="98" width="12" height="20" fill="url(#silverG)"/><path d="M28 20 L72 20 L66 82 Q50 102 34 82 Z" fill="url(#silverG)"/><path d="M28 26 C12 26 8 58 32 72 L33 66 C18 56 20 32 30 32 Z" fill="url(#silverG)"/><path d="M72 26 C88 26 92 58 68 72 L67 66 C82 56 80 32 70 32 Z" fill="url(#silverG)"/></svg>`,
@@ -666,61 +667,94 @@ const TROPHY_SVGS = {
 };
 
 const ICONS = {
-  zen: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#00a8e8" stroke="#fff" stroke-width="4"/><path d="M22 34 L78 34 L30 66 L78 66" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/><circle cx="76" cy="24" r="5" fill="#ffd700"/></svg>`,
-  kras: `<svg viewBox="0 0 100 100"><polygon points="50,4 94,22 94,64 50,96 6,64 6,22" fill="#0b5d36" stroke="#fff" stroke-width="4"/><rect x="25" y="32" width="50" height="36" rx="6" fill="#000"/><text x="50" y="56" font-size="20" font-weight="900" fill="#ffd700" text-anchor="middle">FCK</text></svg>`,
-  spa: `<svg viewBox="0 0 100 100"><polygon points="50,6 94,50 50,94 6,50" fill="#d90429" stroke="#fff" stroke-width="4"/><polygon points="50,26 74,50 50,74 26,50" fill="#d90429"/><text x="50" y="58" font-size="28" font-weight="900" fill="#fff" text-anchor="middle">C</text></svg>`,
-  cska: `<svg viewBox="0 0 100 100"><path d="M14 16 L86 16 L86 56 C86 78 50 94 50 94 C50 94 14 78 14 56 Z" fill="#003566" stroke="#d90429" stroke-width="6"/><text x="50" y="54" font-size="16" font-weight="900" fill="#ffd700" text-anchor="middle">ЦСКА</text></svg>`,
-  din: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#0077b6" stroke="#fff" stroke-width="4"/><text x="50" y="70" font-size="52" font-weight="900" fill="#fff" text-anchor="middle" font-style="italic">Д</text></svg>`,
   super: `<svg viewBox="0 0 100 100"><polygon points="50,4 94,22 94,64 50,96 6,64 6,22" fill="#000" stroke="#ffd700" stroke-width="6"/><text x="50" y="62" font-size="34" text-anchor="middle">💀</text></svg>`,
   mega: `<svg viewBox="0 0 100 100"><polygon points="50,2 96,20 96,66 50,98 4,66 4,20" fill="#0a051d" stroke="#00f2fe" stroke-width="6"/><text x="50" y="64" font-size="34" text-anchor="middle">⚡</text></svg>`
 };
 
-function getFallbackShield(shortName, color) {
-  return `<svg viewBox="0 0 100 100" width="100%" height="100%"><polygon points="50,4 94,22 94,64 50,96 6,64 6,22" fill="${color || '#1e293b'}" stroke="#ffffff" stroke-width="5"/><text x="50" y="60" font-size="24" font-weight="900" fill="#ffffff" text-anchor="middle">${shortName.slice(0, 3)}</text></svg>`;
+function getShield(short, c1, c2 = '#ffffff') {
+  return `<svg viewBox="0 0 100 100"><polygon points="50,6 92,24 92,62 50,94 8,62 8,24" fill="${c1}" stroke="${c2}" stroke-width="5"/><text x="50" y="58" font-size="24" font-weight="900" fill="${c2}" text-anchor="middle">${short.slice(0,3)}</text></svg>`;
 }
 
-const makeClub = (id, name, short, gk, logo, kickerNames, svg = null) => ({
-  id, name, short, gk, logo, svg,
+const makeTeam = (id, name, short, gk, kickerNames, c1, c2) => ({
+  id, name, short, gk,
+  svg: getShield(short, c1, c2),
   kickers: kickerNames.split(',').map((n, i) => ({ name: n, num: (i * 2 + 7).toString() }))
 });
 
+// 30 СБОРНЫХ МИРА (В 3 РАЗА БОЛЬШЕ)
+const NATIONS_30 = [
+  makeTeam('rus', 'Россия', 'РОС', '#ff9100', 'А. Головин,А. Миранчук,К. Тюкавин,Ф. Чалов,М. Кисляк', '#d90429', '#ffffff'),
+  makeTeam('bra', 'Бразилия', 'БРА', '#00e676', 'Винисиус Жр,Родриго,Рафинья,Эндрик,Лукас Пакета', '#ffd700', '#009b3a'),
+  makeTeam('arg', 'Аргентина', 'АРГ', '#2979ff', 'Л. Месси,Х. Альварес,Л. Мартинес,Р. Де Пауль,Э. Фернандес', '#74acdf', '#ffffff'),
+  makeTeam('fra', 'Франция', 'ФРА', '#ffd600', 'К. Мбаппе,А. Гризманн,У. Дембеле,О. Тчуамени,Б. Барколя', '#002395', '#ed2939'),
+  makeTeam('esp', 'Испания', 'ИСП', '#304ffe', 'Л. Ямаль,Нико Уильямс,Дани Ольмо,Педри,Родри', '#aa151b', '#f1bf00'),
+  makeTeam('eng', 'Англия', 'АНГ', '#ff5252', 'Г. Кейн,Д. Беллингем,Б. Сака,Ф. Фоден,Д. Райс', '#ffffff', '#ce1124'),
+  makeTeam('ger', 'Германия', 'ГЕР', '#212121', 'Д. Мусиала,Ф. Вирц,К. Хаверц,Л. Сане,Й. Киммих', '#000000', '#dd0000'),
+  makeTeam('por', 'Португалия', 'ПОР', '#ffab00', 'К. Роналду,Б. Фернандеш,Бернарду Силва,Р. Леау,Жоау Невеш', '#006600', '#ff0000'),
+  makeTeam('ned', 'Нидерланды', 'НИД', '#00e676', 'М. Депай,К. Гакпо,Х. Симонс,Т. Рейндерс,В. ван Дейк', '#ff4f00', '#ffffff'),
+  makeTeam('cro', 'Хорватия', 'ХОР', '#00e5ff', 'Л. Модрич,А. Крамарич,М. Ковачич,И. Перишич,М. Пашалич', '#ff0000', '#ffffff'),
+  makeTeam('ita', 'Италия', 'ИТА', '#00e5ff', 'Ф. Кьеза,Н. Барелла,Л. Пеллегрини,М. Ретеги,Ф. Димарко', '#0064aa', '#ffffff'),
+  makeTeam('bel', 'Бельгия', 'БЕЛ', '#ff5252', 'К. Де Брёйне,Р. Лукаку,Ж. Доку,Л. Троссард,А. Онана', '#ed2939', '#ffd700'),
+  makeTeam('uru', 'Уругвай', 'УРУ', '#00b4d8', 'Ф. Вальверде,Д. Нуньес,М. Араухо,Р. Бентанкур,Н. де ла Крус', '#55b5e6', '#ffffff'),
+  makeTeam('col', 'Колумбия', 'КОЛ', '#ffd600', 'Х. Родригес,Л. Диас,Д. Кордоба,Р. Борре,Р. Риос', '#fcd116', '#003893'),
+  makeTeam('mar', 'Марокко', 'МАР', '#00e676', 'А. Хакими,Х. Зиеш,Ю. Эн-Несири,С. Амрабат,Б. Браим', '#c1272d', '#006233'),
+  makeTeam('jpn', 'Япония', 'ЯПО', '#304ffe', 'Т. Кубо,К. Митома,Т. Минамино,Р. Доан,В. Эндо', '#00008b', '#ffffff'),
+  makeTeam('mex', 'Мексика', 'МЕК', '#ff9100', 'С. Хименес,Э. Альварес,И. Лосано,О. Пинеда,С. Чавес', '#006847', '#ce1126'),
+  makeTeam('usa', 'США', 'США', '#ff5252', 'К. Пулишич,Т. Веа,У. Маккенни,Ф. Балогун,Ю. Муса', '#002868', '#bf0a30'),
+  makeTeam('sen', 'Сенегал', 'СЕН', '#00e676', 'С. Мане,Н. Джексон,И. Сарр,П. Сарр,И. Гейе', '#00853f', '#fdef42'),
+  makeTeam('srb', 'Сербия', 'СЕР', '#304ffe', 'Д. Влахович,А. Митрович,С. Милинкович,Д. Тадич,Л. Самарджич', '#c6363c', '#0c4076'),
+  makeTeam('sui', 'Швейцария', 'ШВЙ', '#ff1744', 'Г. Джака,Б. Эмболо,Р. Фройлер,Д. Шакири,М. Аканджи', '#d52b1e', '#ffffff'),
+  makeTeam('den', 'Дания', 'ДАН', '#ff5252', 'Р. Хёйлунн,К. Эриксен,П. Хёйбьерг,Й. Линдстрём,Й. Андерсен', '#c60c30', '#ffffff'),
+  makeTeam('pol', 'Польша', 'ПОЛ', '#ff1744', 'Р. Левандовски,П. Зелиньски,К. Свидерски,Н. Залевски,Я. Кивер', '#dc143c', '#ffffff'),
+  makeTeam('nor', 'Норвегия', 'НОР', '#304ffe', 'Э. Холанд,М. Эдегор,А. Сёрлот,А. Нуса,С. Берге', '#ba0c2f', '#00205b'),
+  makeTeam('swe', 'Швеция', 'ШВЕ', '#ffd600', 'В. Дьёкереш,А. Исак,Д. Кулусевски,Э. Форсберг,В. Линделёф', '#006aa7', '#fecc00'),
+  makeTeam('tur', 'Турция', 'ТУР', '#ff1744', 'А. Гюлер,Х. Чалханоглу,К. Актюркоглу,Б. Йылмаз,К. Йылдыз', '#e30a17', '#ffffff'),
+  makeTeam('aut', 'Австрия', 'АВС', '#ff1744', 'М. Забитцер,К. Лаймер,М. Арнаутович,К. Баумгартнер,Н. Зайвальд', '#ed2939', '#ffffff'),
+  makeTeam('kor', 'Южная Корея', 'КОР', '#304ffe', 'Сон Хын Мин,Ли Кан Ин,Хван Хи Чхан,Ким Мин Джэ,Хван Ин Бом', '#cd2e3a', '#0047a0'),
+  makeTeam('ecu', 'Эквадор', 'ЭКВ', '#ffd600', 'М. Кайседо,Э. Валенсия,К. Родригес,П. Инкапье,П. Эступиньян', '#ffdd00', '#034ea2'),
+  makeTeam('cmr', 'Камерун', 'КАМ', '#00e676', 'Б. Мбемо,Ф. Ангисса,В. Абубакар,К. Токо-Экамби,Ж. Кастеллетто', '#007a5e', '#ce1126')
+];
+
+// 30 ЗАЩИЩЕННЫХ КЛУБОВ (В 1.5 РАЗА БОЛЬШЕ, PES-STYLE)
+const CLUBS_30 = [
+  makeTeam('rma', 'Мадрид Бланкос', 'МБЛ', '#00e676', 'К. Мбаппе,Винисиус Жр,Д. Беллингем,Ф. Вальверде,Родриго', '#ffffff', '#1e293b'),
+  makeTeam('bar', 'Каталония Блауграна', 'КАТ', '#00c853', 'Р. Левандовски,Рафинья,Л. Ямаль,Дани Ольмо,Педри', '#a50044', '#004d98'),
+  makeTeam('mci', 'Манчестер Блю', 'МСИ', '#ffd600', 'Э. Холанд,К. Де Брёйне,Ф. Фоден,Бернарду Силва,Родри', '#6cabdd', '#ffffff'),
+  makeTeam('mun', 'Манчестер Ред', 'МЮН', '#00c853', 'Б. Фернандеш,М. Рэшфорд,Р. Хёйлунн,А. Гарначо,Каземиро', '#da291c', '#fbe122'),
+  makeTeam('ars', 'Лондон Ганнерс', 'АРС', '#304ffe', 'Б. Сака,М. Эдегор,К. Хаверц,Л. Троссард,Д. Райс', '#ef0107', '#ffffff'),
+  makeTeam('che', 'Лондон Блюз', 'ЧЕЛ', '#ff5252', 'К. Палмер,Н. Джексон,К. Нкунку,Э. Фернандес,П. Нету', '#034694', '#ffffff'),
+  makeTeam('liv', 'Мерсисайд Ред', 'ЛИВ', '#2e7d32', 'Мохамед Салах,Д. Нуньес,Д. Собослаи,А. Мак Аллистер,К. Гакпо', '#c8102e', '#ffffff'),
+  makeTeam('tot', 'Лондон Спёрс', 'ТОТ', '#ffea00', 'Сон Хын Мин,Д. Мэддисон,Д. Соланке,Деян Кулусевски,Б. Джонсон', '#132257', '#ffffff'),
+  makeTeam('bay', 'Мюнхен Бавария', 'БАВ', '#111111', 'Г. Кейн,Д. Мусиала,М. Олисе,Л. Сане,Т. Мюллер', '#dc052d', '#ffffff'),
+  makeTeam('bvb', 'Дортмунд БВБ', 'БВБ', '#ffd600', 'С. Гирасси,Ю. Брандт,К. Адейеми,Д. Мален,М. Забитцер', '#fde100', '#000000'),
+  makeTeam('b04', 'Леверкузен 04', 'ЛЕВ', '#2979ff', 'Ф. Вирц,В. Бонифейс,А. Гримальдо,П. Шик,Г. Джака', '#e32221', '#000000'),
+  makeTeam('psg', 'Париж Капитал', 'ПСЖ', '#ff9100', 'У. Дембеле,Б. Барколя,Витинья,А. Хакими,Р. Коло Муани', '#004170', '#da291c'),
+  makeTeam('juv', 'Турин Зебра', 'ЮВЕ', '#ff6d00', 'Д. Влахович,Т. Копмейнерс,К. Йылдыз,Ф. Консейсау,Дуглас Луис', '#000000', '#ffffff'),
+  makeTeam('int', 'Милан Нерадзурри', 'ИНТ', '#ffea00', 'Х. Чалханоглу,Лаутаро,М. Тюрам,Н. Барелла,Ф. Димарко', '#010e80', '#000000'),
+  makeTeam('mil', 'Милан Россонери', 'МИЛ', '#ff1744', 'Р. Леау,Т. Эрнандес,К. Пулишич,А. Мората,Т. Рейндерс', '#fb090b', '#000000'),
+  makeTeam('atm', 'Мадрид Рохибланкос', 'АТМ', '#00e5ff', 'Х. Альварес,А. Гризманн,А. Сёрлот,Р. Де Пауль,К. Галлахер', '#cb3524', '#272e61'),
+  makeTeam('nap', 'Неаполь Адзурри', 'НАП', '#00e5ff', 'Х. Кварацхелия,Р. Лукаку,С. Лоботка,А. Замбо-Ангисса,М. Политано', '#12a0d7', '#ffffff'),
+  makeTeam('rom', 'Рим Волки', 'РОМ', '#ffd600', 'П. Дибала,А. Довбик,Л. Пеллегрини,М. Коне,С. Эль-Шаарави', '#8e1f2f', '#f19e18'),
+  makeTeam('ben', 'Лиссабон Иглз', 'БЕН', '#ff1744', 'А. Ди Мария,В. Павлидис,О. Кёкчю,К. Актюркоглу,Флорентину', '#e80000', '#ffffff'),
+  makeTeam('spo', 'Лиссабон Лионс', 'СПО', '#00e676', 'В. Дьёкереш,Тринкан,П. Гонсалвеш,М. Хьюлманд,Ж. Катаму', '#008057', '#ffffff'),
+  makeTeam('por', 'Порту Драгонс', 'ПОР', '#2979ff', 'Саму Омородион,Галено,Пепе,Нико Гонсалес,Алан Варела', '#0038a8', '#ffffff'),
+  makeTeam('ajx', 'Амстердам', 'АЯК', '#ff1744', 'Б. Бробби,С. Бергвейн,К. Тейлор,Д. Классен,Д. Шутало', '#d2122e', '#ffffff'),
+  makeTeam('psv', 'Эйндховен', 'ПСВ', '#ff5252', 'Л. де Йонг,М. Тилльман,Й. Бакайоко,И. Сайбари,О. Боскальи', '#f31118', '#ffffff'),
+  makeTeam('gal', 'Стамбул Лайонс', 'ГАЛ', '#ff9100', 'В. Осимхен,М. Икарди,Д. Мертенс,Б. Йылмаз,Л. Торрейра', '#a32638', '#fdb913'),
+  makeTeam('zen', 'Санкт-Петербург', 'ЗЕН', '#ffd600', 'М. Глушенков,М. Кассьерра,Клаудиньо,Вендел,А. Соболев', '#00a8e8', '#ffffff'),
+  makeTeam('kras', 'Быки Кубани', 'КРА', '#00e676', 'Д. Кордоба,Э. Сперцян,Жоау Батчи,К. Ленини,В. Са', '#0b5d36', '#ffffff'),
+  makeTeam('spa', 'Красно-Белые', 'СПА', '#ff1744', 'Э. Барко,М. Угальде,Т. Бонгонда,Маркиньос,Х. Медина', '#d90429', '#ffffff'),
+  makeTeam('cska', 'Армейцы', 'ЦСК', '#00e5ff', 'И. Обляков,Т. Мусаев,А. Файзуллаев,М. Пьянич,В. Давила', '#003566', '#d90429'),
+  makeTeam('din', 'Бело-Голубые', 'ДИН', '#304ffe', 'К. Тюкавин,Бителло,Х. Карраскаль,М. Нгамалё,Л. Чавес', '#0077b6', '#ffffff'),
+  makeTeam('lok', 'Железнодорожники', 'ЛОК', '#00e676', 'А. Батраков,Д. Воробьев,С. Пиняев,А. Карпукас,И. Самошников', '#00853f', '#e30613')
+];
+
 const DB = {
-  wc: [
-    makeClub('rus', 'Россия', 'РОС', '#ff9100', 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg', 'А. Головин,А. Миранчук,К. Тюкавин,Ф. Чалов,М. Кисляк'),
-    makeClub('fra', 'Франция', 'ФРА', '#ffd600', 'https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg', 'К. Мбаппе,А. Гризманн,У. Дембеле,О. Тчуамени,Б. Барколя'),
-    makeClub('bra', 'Бразилия', 'БРА', '#00e676', 'https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg', 'Винисиус Жр,Родриго,Рафинья,Эндрик,Лукас Пакета'),
-    makeClub('arg', 'Аргентина', 'АРГ', '#2979ff', 'https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg', 'Л. Месси,Х. Альварес,Л. Мартинес,Р. Де Пауль,Э. Фернандес'),
-    makeClub('esp', 'Испания', 'ИСП', '#304ffe', 'https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg', 'Л. Ямаль,Нико Уильямс,Дани Ольмо,Педри,Родри'),
-    makeClub('eng', 'Англия', 'АНГ', '#ff5252', 'https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg', 'Г. Кейн,Д. Беллингем,Б. Сака,Ф. Фоден,Д. Райс')
-  ],
-  euro: [
-    makeClub('esp', 'Испания', 'ИСП', '#304ffe', 'https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg', 'Л. Ямаль,Нико Уильямс,Дани Ольмо,Педри,Родри'),
-    makeClub('eng', 'Англия', 'АНГ', '#ff5252', 'https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg', 'Г. Кейн,Д. Беллингем,Б. Сака,Ф. Фоден,К. Палмер'),
-    makeClub('fra', 'Франция', 'ФРА', '#ffd600', 'https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg', 'К. Мбаппе,А. Гризманн,У. Дембеле,О. Тчуамени,Б. Барколя'),
-    makeClub('ger', 'Германия', 'ГЕР', '#212121', 'https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg', 'Д. Мусиала,Ф. Вирц,К. Хаверц,Л. Сане,Й. Киммих')
-  ],
-  copa: [
-    makeClub('arg', 'Аргентина', 'АРГ', '#2979ff', 'https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg', 'Л. Месси,Х. Альварес,Л. Мартинес,Р. Де Пауль,Э. Фернандес'),
-    makeClub('bra', 'Бразилия', 'БРА', '#00e676', 'https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg', 'Винисиус Жр,Родриго,Рафинья,Эндрик,Лукас Пакета'),
-    makeClub('col', 'Колумбия', 'КОЛ', '#ffd600', 'https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg', 'Х. Родригес,Л. Диас,Д. Кордоба,Р. Борре,Р. Риос'),
-    makeClub('uru', 'Уругвай', 'УРУ', '#00b4d8', 'https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg', 'Ф. Вальверде,Д. Нуньес,М. Араухо,Р. Бентанкур,Н. де ла Крус')
-  ],
-  uefa: [
-    makeClub('zen', 'Зенит', 'ЗЕН', '#ffd600', '', 'М. Глушенков,М. Кассьерра,Клаудиньо,Вендел,А. Соболев', ICONS.zen),
-    makeClub('kras', 'Краснодар', 'КРА', '#00e676', '', 'Д. Кордоба,Э. Сперцян,Жоау Батчи,К. Ленини,В. Са', ICONS.kras),
-    makeClub('spa', 'Спартак', 'СПА', '#ff1744', '', 'Э. Барко,М. Угальде,Т. Бонгонда,Маркиньос,Х. Медина', ICONS.spa),
-    makeClub('cska', 'ЦСКА', 'ЦСК', '#00e5ff', '', 'И. Обляков,Т. Мусаев,А. Файзуллаев,М. Пьянич,В. Давила', ICONS.cska),
-    makeClub('din', 'Динамо М', 'ДИН', '#304ffe', '', 'К. Тюкавин,Бителло,Х. Карраскаль,М. Нгамалё,Л. Чавес', ICONS.din),
-    makeClub('rma', 'Реал Мадрид', 'РМА', '#00e676', 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg', 'К. Мбаппе,Винисиус Жр,Д. Беллингем,Ф. Вальверде,Родриго'),
-    makeClub('mci', 'Манчестер Сити', 'МСИ', '#ffd600', 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg', 'Э. Холанд,К. Де Брёйне,Ф. Фоден,Бернарду Силва,Родри'),
-    makeClub('bar', 'Барселона', 'БАР', '#00c853', 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg', 'Р. Левандовски,Рафинья,Л. Ямаль,Дани Ольмо,Педри')
-  ],
-  facup: [
-    makeClub('mci', 'Ман Сити', 'МСИ', '#ffd600', 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg', 'Э. Холанд,К. Де Брёйне,Ф. Фоден,Бернарду Силва,Родри'),
-    makeClub('ars', 'Арсенал', 'АРС', '#304ffe', 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg', 'Б. Сака,М. Эдегор,К. Хаверц,Л. Троссард,Д. Райс'),
-    makeClub('liv', 'Ливерпуль', 'ЛИВ', '#2e7d32', 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg', 'Мохамед Салах,Д. Нуньес,Д. Собослаи,А. Мак Аллистер,К. Гакпо'),
-    makeClub('mun', 'Ман Юнайтед', 'МЮ', '#00c853', 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg', 'Б. Фернандеш,М. Рэшфорд,Р. Хёйлунн,А. Гарначо,Каземиро')
-  ]
+  wc: NATIONS_30,
+  euro: NATIONS_30.filter(t => ['rus','fra','esp','eng','ger','por','ned','cro','ita','bel','srb','sui','den','pol','nor','swe','tur','aut'].includes(t.id)),
+  copa: NATIONS_30.filter(t => ['arg','bra','uru','col','mex','usa','ecu'].includes(t.id)),
+  uefa: CLUBS_30,
+  facup: CLUBS_30.filter(t => ['mci','mun','ars','che','liv','tot'].includes(t.id))
 };
 
 const PHRASES = {
@@ -826,9 +860,11 @@ class SoundFX {
   }
 }
 
+// ЗВУКОВОЙ ДВИЖОК С УВЕЛИЧЕННОЙ В 3 РАЗА ГРОМКОСТЬЮ И TUKOH TAKA
 class SynthMusicManager {
   constructor() {
     this.ctx = null;
+    this.masterGain = null;
     this.muted = false;
     this.timer = null;
     this.currentTrack = null;
@@ -839,6 +875,9 @@ class SynthMusicManager {
   init() {
     if (!this.ctx) {
       this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this.masterGain = this.ctx.createGain();
+      this.masterGain.gain.setValueAtTime(0.7, this.ctx.currentTime); // ГРОМКОСТЬ В 3 РАЗА ВЫШЕ
+      this.masterGain.connect(this.ctx.destination);
       this.createNoiseBuffer();
     }
     if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
@@ -860,11 +899,11 @@ class SynthMusicManager {
       if (type === 'kick') {
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        osc.frequency.setValueAtTime(140, time);
+        osc.frequency.setValueAtTime(150, time);
         osc.frequency.exponentialRampToValueAtTime(32, time + 0.1);
-        gain.gain.setValueAtTime(0.25, time);
+        gain.gain.setValueAtTime(0.5, time);
         gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
-        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.connect(gain); gain.connect(this.masterGain);
         osc.start(time); osc.stop(time + 0.12);
       } else if (type === 'snare' && this.noiseBuffer) {
         const noise = this.ctx.createBufferSource();
@@ -873,9 +912,9 @@ class SynthMusicManager {
         filter.type = 'bandpass';
         filter.frequency.value = 1800;
         const gain = this.ctx.createGain();
-        gain.gain.setValueAtTime(0.14, time);
+        gain.gain.setValueAtTime(0.3, time);
         gain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
-        noise.connect(filter); filter.connect(gain); gain.connect(this.ctx.destination);
+        noise.connect(filter); filter.connect(gain); gain.connect(this.masterGain);
         noise.start(time); noise.stop(time + 0.1);
       } else if (type === 'hat' && this.noiseBuffer) {
         const noise = this.ctx.createBufferSource();
@@ -884,9 +923,9 @@ class SynthMusicManager {
         filter.type = 'highpass';
         filter.frequency.value = 7500;
         const gain = this.ctx.createGain();
-        gain.gain.setValueAtTime(0.06, time);
+        gain.gain.setValueAtTime(0.15, time);
         gain.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
-        noise.connect(filter); filter.connect(gain); gain.connect(this.ctx.destination);
+        noise.connect(filter); filter.connect(gain); gain.connect(this.masterGain);
         noise.start(time); noise.stop(time + 0.04);
       }
     } catch(e) {}
@@ -899,16 +938,16 @@ class SynthMusicManager {
       const gain = this.ctx.createGain();
       osc.type = type;
       osc.frequency.setValueAtTime(freq, time);
-      gain.gain.setValueAtTime(gainVal * 0.7, time);
+      gain.gain.setValueAtTime(gainVal * 1.8, time); // Усиленная амплитуда
       gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-      osc.connect(gain); gain.connect(this.ctx.destination);
+      osc.connect(gain); gain.connect(this.masterGain);
       osc.start(time); osc.stop(time + dur);
     } catch(e) {}
   }
 
   play(trackKey) {
     if (this.muted) return;
-    if (this.currentTrack === trackKey && this.timer) return; // Не перезапускать если уже играет этот трек
+    if (this.currentTrack === trackKey && this.timer) return; // Не перезапускать если уже играет
 
     this.stop();
     this.init();
@@ -935,7 +974,7 @@ class SynthMusicManager {
       if (s % 2 === 0) this.playDrum('hat', t);
 
       if (trackKey === 'ucl') {
-        // TUKOH TAKA ТРЕК
+        // TUKOH TAKA ТРЕК (В ЛИГЕ ЧЕМПИОНОВ)
         const tukohNotes = [
           440, 0, 440, 440, 523, 0, 440, 0,
           392, 0, 392, 392, 440, 0, 392, 0,
@@ -943,8 +982,8 @@ class SynthMusicManager {
           330, 330, 349, 392, 440, 0, 523, 0
         ];
         const bass = [110, 110, 98, 87];
-        if (tukohNotes[s]) this.playTone(tukohNotes[s], 'triangle', 0.12, 0.12, t);
-        if (s % 8 === 0) this.playTone(bass[Math.floor(s / 8)], 'sawtooth', 0.35, 0.1, t);
+        if (tukohNotes[s]) this.playTone(tukohNotes[s], 'triangle', 0.12, 0.16, t);
+        if (s % 8 === 0) this.playTone(bass[Math.floor(s / 8)], 'sawtooth', 0.35, 0.14, t);
       } else if (trackKey === 'wc') {
         const wcNotes = [
           523, 0, 523, 659, 783, 0, 659, 0,
@@ -952,27 +991,27 @@ class SynthMusicManager {
           659, 0, 659, 783, 880, 0, 783, 0,
           659, 0, 587, 523, 587, 0, 523, 0
         ];
-        if (wcNotes[s]) this.playTone(wcNotes[s], 'sawtooth', 0.14, 0.09, t);
-        if (s % 4 === 0) this.playTone(130, 'triangle', 0.25, 0.12, t);
+        if (wcNotes[s]) this.playTone(wcNotes[s], 'sawtooth', 0.14, 0.14, t);
+        if (s % 4 === 0) this.playTone(130, 'triangle', 0.25, 0.16, t);
       } else if (trackKey === 'euro') {
         const euroNotes = [
           440, 523, 659, 880, 783, 659, 523, 440,
           392, 440, 523, 659, 587, 523, 392, 440
         ];
-        this.playTone(euroNotes[s % 16], 'sine', 0.1, 0.1, t);
-        if (s % 4 === 0) this.playTone(110, 'sawtooth', 0.2, 0.12, t);
+        this.playTone(euroNotes[s % 16], 'sine', 0.1, 0.15, t);
+        if (s % 4 === 0) this.playTone(110, 'sawtooth', 0.2, 0.16, t);
       } else if (trackKey === 'copa') {
         const copaNotes = [
           392, 0, 493, 0, 587, 587, 0, 659,
           0, 587, 0, 493, 392, 0, 440, 0
         ];
-        if (copaNotes[s % 16]) this.playTone(copaNotes[s % 16], 'triangle', 0.15, 0.11, t);
-        if (s % 8 === 0) this.playTone(98, 'sine', 0.3, 0.15, t);
+        if (copaNotes[s % 16]) this.playTone(copaNotes[s % 16], 'triangle', 0.15, 0.15, t);
+        if (s % 8 === 0) this.playTone(98, 'sine', 0.3, 0.18, t);
       } else {
         const menuBass = [130, 130, 110, 98, 130, 130, 146, 164];
         const menuLead = [261, 329, 392, 523, 440, 392, 329, 392];
-        if (s % 4 === 0) this.playTone(menuBass[(s / 4) % 8], 'triangle', 0.22, 0.14, t);
-        if (s % 2 === 0) this.playTone(menuLead[(s / 2) % 8], 'sine', 0.08, 0.08, t);
+        if (s % 4 === 0) this.playTone(menuBass[(s / 4) % 8], 'triangle', 0.22, 0.18, t);
+        if (s % 2 === 0) this.playTone(menuLead[(s / 2) % 8], 'sine', 0.08, 0.12, t);
       }
 
       this.step++;
@@ -1286,14 +1325,14 @@ class Game {
     const euroBtn = document.getElementById('chip-euro');
     const copaBtn = document.getElementById('chip-copa');
     if (this.unlockedTours.includes('euro')) {
-      euroBtn.innerText = '🇪🇺 EURO'; euroBtn.classList.remove('locked');
+      euroBtn.innerText = '🇪🇺 ЕВРО'; euroBtn.classList.remove('locked');
     } else {
-      euroBtn.innerText = '🔒 EURO (200🪙)'; euroBtn.classList.add('locked');
+      euroBtn.innerText = '🔒 ЕВРО (200🪙)'; euroBtn.classList.add('locked');
     }
     if (this.unlockedTours.includes('copa')) {
-      copaBtn.innerText = '🌎 COPA'; copaBtn.classList.remove('locked');
+      copaBtn.innerText = '🌎 АМЕРИКА'; copaBtn.classList.remove('locked');
     } else {
-      copaBtn.innerText = '🔒 COPA (250🪙)'; copaBtn.classList.add('locked');
+      copaBtn.innerText = '🔒 АМЕРИКА (250🪙)'; copaBtn.classList.add('locked');
     }
   }
 
@@ -1321,7 +1360,7 @@ class Game {
     else list = [...DB.uefa];
 
     const isNational = ['wc', 'euro', 'copa'].includes(this.tour);
-    const superName = isNational ? 'PRIME BRAZIL💀' : 'SUPER TEAM💀';
+    const superName = isNational ? 'PRIME BRASIL💀' : 'SUPER TEAM💀';
     const superId = `super_${this.tour}`;
 
     list.push({
@@ -1364,31 +1403,30 @@ class Game {
     return list;
   }
 
-  // МУЗЫКА В МЕНЮ НЕ ИГРАЕТ ЗАНОВО ПРИ ВЫБОРЕ ДРУГОГО ТУРНИРА
+  // МУЗЫКА В МЕНЮ НЕ ИГРАЕТ ЗАНОВО ПРИ ПЕРЕКЛЮЧЕНИИ ТУРНИРОВ
   setTour(t) {
     if (t === 'euro' && !this.unlockedTours.includes('euro')) {
       if (this.coins >= 200) {
-        if (confirm('Разблокировать турнир EURO за 200 монет?')) {
+        if (confirm('Разблокировать Кубок Европы за 200 монет?')) {
           this.coins -= 200; this.unlockedTours.push('euro'); this.saveState();
         } else return;
-      } else { alert('EURO стоит 200 монет!'); return; }
+      } else { alert('Кубок Европы стоит 200 монет!'); return; }
     }
     if (t === 'copa' && !this.unlockedTours.includes('copa')) {
       if (this.coins >= 250) {
-        if (confirm('Разблокировать Copa America за 250 монет?')) {
+        if (confirm('Разблокировать Кубок Америки за 250 монет?')) {
           this.coins -= 250; this.unlockedTours.push('copa'); this.saveState();
         } else return;
-      } else { alert('Copa America стоит 250 монет!'); return; }
+      } else { alert('Кубок Америки стоит 250 монет!'); return; }
     }
 
     this.tour = t;
     document.body.setAttribute('data-tour', t);
-    const names = { wc:'🌍 ЧМ FIFA', euro:'🇪🇺 UEFA EURO', copa:'🌎 COPA AMERICA', ucl:'⭐ ЛЧ UEFA', uel:'🔥 ЛЕ UEFA', uecl:'🟢 ЛК UEFA', facup:'🦁 FA CUP' };
+    const names = { wc:'🌍 МИРОВОЙ КУБОК 2026', euro:'🇪🇺 КУБОК ЕВРОПЫ', copa:'🌎 КУБОК АМЕРИКИ', ucl:'⭐ КУБОК ЧЕМПИОНОВ', uel:'🔥 ЛИГА КУБОК', uecl:'🟢 КОНФЕРЕНЦИЯ', facup:'🦁 КУБОК АНГЛИИ' };
     document.getElementById('headerTourTitle').innerText = names[t];
 
     this.fx.setTour(t);
 
-    // Играем трек меню только если он еще не играет
     if (this.music.currentTrack !== 'menu') {
       this.music.play('menu');
     }
@@ -1428,7 +1466,7 @@ class Game {
       } else {
         this.dom.pSelect.disabled = false;
         this.dom.playoffResumeBox.style.display = 'none';
-        this.dom.teamsHeaderLabel.innerText = 'Выбери клуб для сетки плей-офф';
+        this.dom.teamsHeaderLabel.innerText = 'Выбери команду для сетки плей-офф';
         this.dom.startBtn.innerText = 'ВЫЙТИ НА ПОЛЕ';
       }
     } else {
@@ -1444,10 +1482,8 @@ class Game {
   renderCrest(container, team) {
     if (team.svg) {
       container.innerHTML = team.svg;
-    } else if (team.logo) {
-      container.innerHTML = `<img src="${team.logo}" alt="" onerror="this.onerror=null;this.parentElement.innerHTML=getFallbackShield('${team.short}','${team.gk}');">`;
     } else {
-      container.innerHTML = getFallbackShield(team.short, team.gk);
+      container.innerHTML = getShield(team.short, '#1e293b');
     }
   }
 
@@ -1628,7 +1664,7 @@ class Game {
     }
   }
 
-  // ЗАДЕРЖКА 0.7 СЕКУНДЫ ПЕРЕД ВЫПОЛНЕНИЕМ ДЛЯ ЧЁТКОЙ РАЗНИЦЫ РОЛЕЙ
+  // ЗАДЕРЖКА 0.7 СЕКУНДЫ ПЕРЕД ВЫПОЛНЕНИЕМ
   shot(zone) {
     if (this.locked) return;
     this.locked = true;
@@ -1794,15 +1830,15 @@ class Game {
       if (Math.random() < 0.50) botShotZone = playerGkZone;
     } else if (this.diff === 'normal') {
       dur = 0.36;
-      if (this.bStreak >= 3) { dur = 0.28; this.dom.ball.className = 'ball on-fire'; }
+      if (this.bStreak >= 3) { dur = 0.28; this.dom.ball.classList.add('on-fire'); }
     } else if (this.diff === 'legend') {
       dur = 0.26;
       const corners = ['TL', 'TR', 'BL', 'BR'].filter(z => z !== playerGkZone);
       botShotZone = corners[Math.floor(Math.random() * corners.length)] || botShotZone;
-      if (this.bStreak >= 2) this.dom.ball.className = 'ball on-fire';
+      if (this.bStreak >= 2) this.dom.ball.classList.add('on-fire');
     } else if (this.diff === 'ultimate') {
       dur = 0.16;
-      this.dom.ball.className = 'ball on-fire';
+      this.dom.ball.classList.add('on-fire');
       if (Math.random() < 0.85) {
         const smartCorners = ['TL', 'TR', 'BL', 'BR'].filter(z => z !== playerGkZone);
         botShotZone = smartCorners[Math.floor(Math.random() * smartCorners.length)] || botShotZone;
@@ -2278,7 +2314,9 @@ class Game {
       if (this.isPlayoffActive) {
         this.savePlayoffState();
       }
-      this.music.play('menu');
+      if (this.music.currentTrack !== 'menu') {
+        this.music.play('menu');
+      }
       this.showScreen('menu');
       this.setTour(this.tour);
     };
@@ -2368,7 +2406,9 @@ class Game {
     const initAudio = () => {
       this.snd.init();
       this.music.init();
-      this.music.play('menu');
+      if (!this.music.currentTrack) {
+        this.music.play('menu');
+      }
       window.removeEventListener('pointerdown', initAudio);
     };
     window.addEventListener('pointerdown', initAudio, { passive: true });
